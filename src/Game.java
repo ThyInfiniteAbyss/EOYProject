@@ -44,6 +44,7 @@ public class Game extends JPanel implements Runnable, KeyListener, MouseListener
 		w = new Wall(100, 100, 100, 100);
 		cash = 0;
 		currtime = 0;
+		//alkjsdlkj;sadfljk;
 		topwd = 3;
 		sidewd = 1;
 		level = 0;
