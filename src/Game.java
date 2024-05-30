@@ -7,6 +7,7 @@ import java.util.*;
 
 public class Game extends JPanel implements Runnable, KeyListener, MouseListener, MouseMotionListener, ActionListener {
 	private BufferedImage back;
+	private int gravity = 1;
 	private int key, count, cash, topwd, sidewd, level, lives;
 	private ImageIcon background, cMoney, buildbg, upgradebg, clickbg, statsbg, levelbg, levelS, playB;
 	private boolean start, win, moveRight;
@@ -100,6 +101,7 @@ public class Game extends JPanel implements Runnable, KeyListener, MouseListener
 		lives = 3;		
 	}
 
+	/*
 	public void jump() {
         y -= 20;
         gravity = 2;
@@ -113,6 +115,7 @@ public class Game extends JPanel implements Runnable, KeyListener, MouseListener
         y += gravity;
         gravity--;
     }
+	*/
 	
 	@Override
 	protected void paintComponent(Graphics g) {
@@ -229,7 +232,7 @@ public class Game extends JPanel implements Runnable, KeyListener, MouseListener
 	public void run() {
 		try {
 			while (true) {
-				player.move();
+				player.update();
 				Thread.sleep(10);
 				repaint();
 			}
@@ -444,15 +447,37 @@ public class Game extends JPanel implements Runnable, KeyListener, MouseListener
 			screen = '6';
 		}
 
+		//space
 		if (key == KeyEvent.VK_SPACE) {
+			System.out.println("Space key pressed");
 			player.jump();
+		} else if (key == KeyEvent.VK_W) {
+			System.out.println("W key pressed");
+			player.moveUp();
+		} else if (key == KeyEvent.VK_S) {
+			System.out.println("S key pressed");
+			player.moveDown();
+		} else if (key == KeyEvent.VK_A) {
+			System.out.println("A key pressed");
+			player.moveLeft();
+		} else if (key == KeyEvent.VK_D) {
+			System.out.println("D key pressed");
+			player.moveRight();
 		}
+		player.update(gravity);
 	}
 	
 	//Do not delete
 	@Override
 	public void keyReleased(KeyEvent e) {
 		key=e.getKeyCode();
+		if (key == KeyEvent.VK_W) {
+			player.stopY();
+		} else if (key == KeyEvent.VK_S) {
+			player.stopY();
+		} else if (key == KeyEvent.VK_A) {
+			player.stopX();
+		}
 	}
 
 	@Override

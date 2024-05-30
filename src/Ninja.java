@@ -3,7 +3,8 @@ import java.awt.Graphics;
 
 public class Ninja extends Build{	
 	
-	private int gravity = 1;
+	private int xSpeed = 0;
+    private int ySpeed = 0;
 
 	public Ninja() {
 		super();
@@ -25,12 +26,50 @@ public class Ninja extends Build{
 		g2d.drawImage(super.getPic().getImage(), super.getX(), super.getY(), super.getW(), super.getH(), null);
 	}
 
-	public void move() {
+	public void move(int gravity) {
         setY(getY() + gravity);
-        gravity++;
     }
 
 	public void jump() {
-        gravity = -5;
+        ySpeed = -5;
+    }
+
+	public void moveUp() {
+		System.out.println("Moving up");
+		ySpeed = -5;
+	}
+	
+	public void moveDown() {
+		System.out.println("Moving down");
+		ySpeed = 5;
+	}
+	
+	public void moveLeft() {
+		System.out.println("Moving left");
+		xSpeed = -5;
+	}
+	
+	public void moveRight() {
+		System.out.println("Moving right");
+		xSpeed = 5;
+	}
+
+	public void stop() {
+        xSpeed = 0;
+        ySpeed = 0;
+    }
+
+	public void stopX() {
+        xSpeed = 0;
+    }
+
+    public void stopY() {
+        ySpeed = 0;
+    }
+
+	public void update(int gravity) {
+        setX(getX() + xSpeed);
+        setY(getY() + ySpeed);
+        ySpeed += gravity;
     }
 }
