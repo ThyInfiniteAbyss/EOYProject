@@ -8,7 +8,7 @@ public class Main extends JFrame{
 	
 	
 	public Main () {
-		super("Space Invaders");
+		super("Tower tappers");
 		setSize(WIDTH, HEIGHT);
 		//setSize(WIDTH, HEIGHT);
 		Game play = new Game();

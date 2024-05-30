@@ -16,7 +16,7 @@ public class Game extends JPanel implements Runnable, KeyListener, MouseListener
 	JLabel mClick, buildClick, upgClick, clickClick, statClick, levelClick, lvl1, lvl2, lvl3, lvl4, lvl5, lvl6, playClick;
 	private Wall w;
 	private Floor f, df;
-	private Player player;
+	private Ninja player;
 	
 	public Game() {
 		new Thread(this).start();
@@ -38,13 +38,12 @@ public class Game extends JPanel implements Runnable, KeyListener, MouseListener
 		levelbg = new ImageIcon("bgLevels.png");
 		levelS = new ImageIcon("levelS.png");
 		playB = new ImageIcon("playB.png");
-		player = new Player(100, 100, ninja.png, 100, 100);
+		player = new Ninja(250, 570, 50, 50);
 		df = new Floor(100, 100, 100, 100);
 		f = new Floor(100, 100, 100, 100);
 		w = new Wall(100, 100, 100, 100);
 		cash = 0;
 		currtime = 0;
-		//alkjsdlkj;sadfljk;
 		topwd = 3;
 		sidewd = 1;
 		level = 0;
@@ -100,13 +99,26 @@ public class Game extends JPanel implements Runnable, KeyListener, MouseListener
 		cash = 0;
 		lives = 3;		
 	}
+
+	public void jump() {
+        y -= 20;
+        gravity = 2;
+    }
+
+	public void moveUp() {
+        jump();
+    }
+
+	public void move() {
+        y += gravity;
+        gravity--;
+    }
 	
-	/*
+	@Override
 	protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-        screen(g);
+        player.draw(g);
     }
-    */
 	
 	public void screen(Graphics g2d) {
 		switch(screen) {
@@ -177,8 +189,9 @@ public class Game extends JPanel implements Runnable, KeyListener, MouseListener
 			g2d.setFont(new Font ("Broadway", Font.BOLD, 25));
 			g2d. drawString("Level 1", 350, 30);
 			levelOne(g2d);
-			//f = new Floor(100, 200, 100, 25, Color.black);
-            //w = new Wall(200, 200, 100, 25, Color.blue);
+			g2d.setColor(Color.yellow);
+			g2d.drawString("Lives: " + lives, 100, 30);
+			drawPlayer(g2d);
 			break;
 			
 		case '2':
@@ -211,30 +224,18 @@ public class Game extends JPanel implements Runnable, KeyListener, MouseListener
 			g2d. drawString("Level 6", 350, 30);
 			break;
 		}
-		/*
-		
-		JButton money;
-		Game(); {
-			ImageIcon icon = new ImageIcon("money.png");
-			money = new JButton();
-			money.setBounds(200, 100, 100, 50);
-			money.addActionListener(this);
-			this.setLayout(null);
-			this.setSize(500, 500);
-			this.setVisible(true);
-			this.add(money);
-		}
-		*/
 	}
 	
 	public void run() {
 		try {
-			while(true) {
-				Thread.currentThread().sleep(5);
+			while (true) {
+				player.move();
+				Thread.sleep(10);
 				repaint();
 			}
+		} catch (InterruptedException e) {
+			e.printStackTrace();
 		}
-		catch(Exception e) {}
 	}
 	
 	public void paint (Graphics g)
@@ -254,16 +255,41 @@ public class Game extends JPanel implements Runnable, KeyListener, MouseListener
 		
 		twoDgraph.drawImage(back, 0, 0, null);
 	}
-	
+
+	public void drawPlayer(Graphics g2d) {
+		player.draw(g2d);
+	}
+
 	public void levelOne(Graphics g2d) {
 		g2d.drawImage(df.getPic().getImage(), 0, 650, 1350, 15, this);
+		g2d.drawImage(df.getPic().getImage(), 400, 380, 25, 25, this);
+		g2d.drawImage(df.getPic().getImage(),690, 330, 25, 25, this);
+		g2d.drawImage(df.getPic().getImage(),840, 330, 25, 25, this);
+		g2d.drawImage(df.getPic().getImage(),775, 275, 10, 25, this);
+		//g2d.drawImage(df.getPic().getImage(),450, 300, 250, 10, this);
 		g2d.setColor(Color.red);
 		g2d.fillRect(0, 650, 1350, 10);
+		g2d.fillRect(400, 380, 25, 25);
+		g2d.fillRect(650, 480, 250, 10);
+		g2d.fillRect(690, 330, 25, 25);
+		g2d.fillRect(775, 275, 10, 25);
+		g2d.fillRect(840, 330, 25, 25);
 		g2d.drawImage(w.getPic().getImage(), 0, 0, 250, 662, this);
 		g2d.drawImage(w.getPic().getImage(), 1100, 0, 250, 662, this);
 		g2d.drawImage(f.getPic().getImage(), 250, 600, 100, 10, this);
-		g2d.drawImage(f.getPic().getImage(), 200, 200, 200, 10, this);
-		g2d.drawImage(f.getPic().getImage(),300, 300, 100, 10, this);
+		g2d.drawImage(f.getPic().getImage(),450, 600, 100, 10, this);
+		g2d.drawImage(f.getPic().getImage(),425, 500, 100, 10, this);
+		g2d.drawImage(f.getPic().getImage(),600, 550, 100, 10, this);
+		g2d.drawImage(f.getPic().getImage(),650, 625, 100, 10, this);
+		g2d.drawImage(f.getPic().getImage(),800, 575, 100, 10, this);
+		g2d.drawImage(f.getPic().getImage(),950, 525, 100, 10, this);
+		g2d.drawImage(f.getPic().getImage(),650, 460, 300, 10, this);
+		g2d.drawImage(f.getPic().getImage(),300, 350, 100, 10, this);
+		g2d.drawImage(f.getPic().getImage(),550, 425, 25, 10, this);
+		g2d.drawImage(f.getPic().getImage(),450, 400, 25, 10, this);
+		g2d.drawImage(f.getPic().getImage(),450, 300, 250, 10, this);
+		g2d.drawImage(f.getPic().getImage(),850, 300, 250, 10, this);
+		g2d.drawImage(f.getPic().getImage(),725, 350, 100, 10, this);
 	}
 	
 	public void drawStartScreen(Graphics g2d) {
@@ -416,6 +442,10 @@ public class Game extends JPanel implements Runnable, KeyListener, MouseListener
 		
 		if(key==54) {
 			screen = '6';
+		}
+
+		if (key == KeyEvent.VK_SPACE) {
+			player.jump();
 		}
 	}
 	
