@@ -8,7 +8,7 @@ public class Main extends JFrame{
 	
 	
 	public Main () {
-		super("Tower tappers");
+		super("Tower clickers");
 		setSize(WIDTH, HEIGHT);
 		//setSize(WIDTH, HEIGHT);
 		Game play = new Game();

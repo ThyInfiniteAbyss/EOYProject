@@ -8,12 +8,14 @@ import java.util.*;
 public class Game extends JPanel implements Runnable, KeyListener, MouseListener, MouseMotionListener, ActionListener {
 	private BufferedImage back;
 	private int gravity = 1;
-	private int key, count, cash, topwd, sidewd, level, lives;
-	private ImageIcon background, cMoney, buildbg, upgradebg, clickbg, statsbg, levelbg, levelS, playB;
+	private int key, count, cash, topwd, sidewd, level, lives, mouseC, bankC, factC, mps, lfC;
+	private ImageIcon background, cMoney, buildbg, upgradebg, clickbg, statsbg, levelbg, levelS, playB, mouse, bank, factory;
 	private boolean start, win, moveRight;
 	private char screen;
-	private double time;
-	private double currtime;
+	private long startTime;
+	private long currTime;
+	//private double time;
+	//private double currtime;
 	JLabel mClick, buildClick, upgClick, clickClick, statClick, levelClick, lvl1, lvl2, lvl3, lvl4, lvl5, lvl6, playClick;
 	private Wall w;
 	private Floor f, df;
@@ -29,7 +31,7 @@ public class Game extends JPanel implements Runnable, KeyListener, MouseListener
 		win = false;
 		moveRight = true;
 		count = 0;
-		screen = '1';
+		screen = 'G';
 		background = new ImageIcon("background.png");
 		cMoney = new ImageIcon("money.png");
 		buildbg = new ImageIcon("bgBuildings.png");
@@ -39,17 +41,30 @@ public class Game extends JPanel implements Runnable, KeyListener, MouseListener
 		levelbg = new ImageIcon("bgLevels.png");
 		levelS = new ImageIcon("levelS.png");
 		playB = new ImageIcon("playB.png");
+		mouse = new ImageIcon("mouse.png");
+		bank = new ImageIcon("bank.png");
+		factory = new ImageIcon("factory.png");
 		player = new Ninja(250, 570, 50, 50);
 		df = new Floor(100, 100, 100, 100);
 		f = new Floor(100, 100, 100, 100);
 		w = new Wall(100, 100, 100, 100);
 		cash = 0;
-		currtime = 0;
 		topwd = 3;
 		sidewd = 1;
 		level = 0;
 		lives = 3;
-		time = System.currentTimeMillis();
+		mouseC = 0;
+		bankC = 0;
+		factC = 0;
+		mps = 0;
+		long currTime = this.currTime;
+    long seconds = currTime;
+    long minutes = seconds / 60;
+    long hours = minutes / 60;
+    seconds %= 60;
+    minutes %= 60;
+		startTime = System.currentTimeMillis();
+		currTime = 0;
 		mClick = new JLabel();
 		mClick.addMouseListener(this);
 		this.add(mClick);
@@ -101,26 +116,17 @@ public class Game extends JPanel implements Runnable, KeyListener, MouseListener
 		lives = 3;		
 	}
 
-	/*
-	public void jump() {
-        y -= 20;
-        gravity = 2;
-    }
-
-	public void moveUp() {
-        jump();
-    }
-
-	public void move() {
-        y += gravity;
-        gravity--;
-    }
-	*/
-	
 	@Override
 	protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         player.draw(g);
+		long seconds = currTime;
+        long minutes = seconds / 60;
+        long hours = minutes / 60;
+        seconds %= 60;
+        minutes %= 60;
+        String timeString = String.format("%02d:%02d:%02d", hours, minutes, seconds);
+        g.drawString(timeString, 100, 100);
     }
 	
 	public void screen(Graphics g2d) {
@@ -135,6 +141,20 @@ public class Game extends JPanel implements Runnable, KeyListener, MouseListener
 			levelClick.setBounds(8, 78, 276, 66);
 			if(sidewd == 1) {
 				g2d.drawImage(buildbg.getImage(), 835, 0, 500, 770, this);
+				g2d.setColor(Color.gray);
+				g2d.fillRect(935, 190, 400, 100);
+				g2d.fillRect(935, 305, 400, 100);
+				g2d.fillRect(935, 420, 400, 100);
+				g2d.setColor(Color.black);
+				g2d.fillRect(935, 190, 14, 600);
+				g2d.fillRect(1324, 190, 20, 600);
+				g2d.fillRect(935, 290, 400, 15);
+				g2d.fillRect(935, 405, 400, 15);
+				g2d.fillRect(935, 520, 400, 15);
+				g2d.drawImage(mouse.getImage(), 950, 200, 50, 50, this);
+				g2d.drawImage(bank.getImage(), 950, 315, 50, 50, this);
+				g2d.drawImage(factory.getImage(), 950, 430, 50, 50, this);
+
 			}else if(sidewd == 2) {
 				g2d.drawImage(upgradebg.getImage(), 835, 0, 500, 770, this);
 			}
@@ -176,8 +196,8 @@ public class Game extends JPanel implements Runnable, KeyListener, MouseListener
 			g2d.setFont(new Font ("Broadway", Font.BOLD, 25));
 			g2d. drawString("Cash: $" + cash, 350, 30);
 			g2d.drawString("Level: " + level, 100, 30);
-			g2d.drawString(new DecimalFormat("#0.00"). format(currtime), 100, 50);
-			currtime = (System.currentTimeMillis()-time)/1000;
+			g2d.drawString("Money per second: " + mps, 100, 50);
+			g2d.drawString("Time: " + String.format("%02d:%02d:%02d", hours, minutes, seconds), 100, 70);
 			//g2d.fillRect(350, 600, 100, 50);
 			break;
 			
@@ -232,8 +252,8 @@ public class Game extends JPanel implements Runnable, KeyListener, MouseListener
 	public void run() {
 		try {
 			while (true) {
-				player.update();
 				Thread.sleep(10);
+				currTime = (System.currentTimeMillis() - startTime) / 1000;
 				repaint();
 			}
 		} catch (InterruptedException e) {
@@ -445,6 +465,21 @@ public class Game extends JPanel implements Runnable, KeyListener, MouseListener
 		
 		if(key==54) {
 			screen = '6';
+		}
+
+		if(key==77) {
+			mouseC += 1;
+			mps += 10;
+		}
+
+		if(key==66) {
+			bankC += 1;
+			mps += 100;
+		}
+
+		if(key==70) {
+			factC += 1;
+			mps += 200;
 		}
 
 		//space
